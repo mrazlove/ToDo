@@ -1,15 +1,14 @@
 <template>
   <div>
-    <input type="text" v-model="searchText" placeholder="Search tasks" />
+   
     <draggable
-        v-model="localItems"
+        v-model="filteredItems"
         :group="{ name: groupName, pull: true, put: true }"
         :itemKey="itemKey"
         @end="updateTasks"
     >
       <template #item="{element, index}">
         <TodoItem
-            v-if="element.text.toLowerCase().includes(searchText.toLowerCase())"
             :task="element"
             :index="index"
             @delete-task="onDeleteTask(index)"
@@ -72,7 +71,8 @@ export default {
     return {
       localItems: [...this.items],
       newTaskText: '',
-      searchText: ''  // Added search text data property
+      searchText: '',
+      filteredItems: [...this.items]
     };
   },
 
@@ -80,6 +80,7 @@ export default {
     items: {
       handler(newItems) {
         this.localItems = [...newItems];
+        this.filterTasks();
       },
       deep: true,
       immediate: true
@@ -97,15 +98,18 @@ export default {
         this.localItems.push({ text: this.newTaskText.trim(), completed: false });
         this.newTaskText = '';
         this.updateTasks();
+        this.filterTasks();
       }
     },
 
     onDeleteTask(index) {
       this.deleteTask(this.listId, index);
-    }
+      this.filterTasks();
+    },
   }
 }
 </script>
+
 <style>
  .add-list-form input {
     padding: 10px;

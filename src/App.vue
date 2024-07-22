@@ -2,6 +2,7 @@
   <div class="body">
     <div class="board">
       <div class="add-list-form">
+        <input type="text" v-model="searchText" placeholder="Search tasks" @input="filterTasks" />
         <input type="text" v-model="newListName" placeholder="New list name" />
         <button @click="addList">Add List</button>
       </div>
@@ -28,6 +29,7 @@
   </div>
 </template>
 
+
 <script>
 import List from "@/components/List.vue";
 
@@ -49,6 +51,10 @@ export default {
   },
 
   methods: {
+    filterTasks() {
+      const searchLower = this.searchText.toLowerCase();
+      this.filteredItems = this.localItems.filter(task => task.text.toLowerCase().includes(searchLower));
+  },
     getTasksByStatus(status) {
       const list = this.lists.find(list => list.name === status);
       return list ? list.tasks : [];

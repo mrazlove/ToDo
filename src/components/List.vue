@@ -76,6 +76,11 @@ export default {
     }
   },
 
+  computed: {
+    filteredItems() {
+      return this.items.filter(item => this.matchesSearch(item));
+    }
+  },
   watch: {
     items: {
       handler(newItems) {
@@ -92,13 +97,16 @@ export default {
       this.$emit('update:items', this.localItems);
       this.saveTasks();
     },
-
+    
     addTask() {
       if (this.newTaskText.trim()) {
         this.localItems.push({ text: this.newTaskText.trim(), completed: false });
-        this.newTaskText = '';
+        const newTask = { text: this.newTaskText.trim(), completed: false };
+        this.localItems.push(newTask); 
         this.updateTasks();
-        this.filterTasks();
+        
+        this.newTaskText = '';
+        this.saveTasks();
       }
     },
 

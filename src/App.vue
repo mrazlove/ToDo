@@ -25,6 +25,7 @@
           :group-name="groupName"
           :list-id="list.id"
           :item-key="'text'"
+          :search-text="searchText"
           @update-items="updateItems"
           />
       </div>

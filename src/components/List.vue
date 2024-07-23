@@ -1,19 +1,18 @@
 <template>
   <div>
-   
     <draggable
-        v-model="filteredItems"
-        :group="{ name: groupName, pull: true, put: true }"
-        :itemKey="itemKey"
-        @end="updateTasks"
+      v-model="filteredItems"
+      :group="{ name: groupName, pull: true, put: true }"
+      :itemKey="itemKey"
+      @end="updateTasks"
     >
-      <template #item="{element, index}">
+      <template #item="{ element, index }">
         <TodoItem
-            :task="element"
-            :index="index"
-            @delete-task="onDeleteTask(index)"
-            @update-tasks="saveTasks"
-            @complete-task="completeTask({ task: element, listId: listId, index: index })"
+          :task="element"
+          :index="index"
+          @delete-task="onDeleteTask(index)"
+          @update-tasks="saveTasks"
+          @complete-task="completeTask({ task: element, listId: listId, index: index })"
         />
       </template>
     </draggable>
@@ -29,6 +28,7 @@ import TodoItem from "@/components/TodoItem.vue";
 import draggable from "vuedraggable";
 
 export default {
+  
   components: {
     TodoItem,
     draggable
@@ -72,15 +72,15 @@ export default {
       localItems: [...this.items],
       newTaskText: '',
       searchText: '',
-      filteredItems: [...this.items]
-    };
+      filtered:' ',
+    }
   },
 
   watch: {
     items: {
       handler(newItems) {
         this.localItems = [...newItems];
-        this.filterTasks();
+
       },
       deep: true,
       immediate: true
@@ -103,14 +103,43 @@ export default {
     },
 
     onDeleteTask(index) {
-      this.deleteTask(this.listId, index);
-      this.filterTasks();
+      this.localItems.splice(index, 1);
+      this.updateTasks();
     },
   }
 }
 </script>
 
 <style>
+.add-task-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.add-task-form input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.add-task-form button {
+  padding: 10px 20px;
+  background-color: #000000;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-task-form button:hover {
+  background-color: #555555;
+}
+
+
+
  .add-list-form input {
     padding: 10px;
     border: 1px solid #ccc;

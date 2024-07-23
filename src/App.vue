@@ -6,7 +6,7 @@
         <input type="text" v-model="newListName" placeholder="New list name" />
         <button @click="addList">Add List</button>
       </div>
-      <div v-for="list in lists" :key="list.id" class="column">
+      <div v-for="list in filteredLists" :key="list.id" class="column">
         <div class="column__header">
           <h2 class="column__title">{{ list.name }}</h2>
           <div class="column__actions">
@@ -14,26 +14,32 @@
             <button @click="deleteList(list.id)">Delete</button>
           </div>
         </div>
-        <List
-            :items="list.tasks"
-            :save-tasks="saveTasks"
-            :delete-task="deleteTask"
-            :complete-task="completeTask"
-            :group-name="list.name"
-            :list-id="list.id"
-            :item-key="'text'"
-            @update:items="updateTasks(list.id)"
-        />
+        <input type="text" v-model="searchText" placeholder="Search tasks" />
+          <List
+          v-for="(list, index) in filteredLists"
+          :key="list.id"
+          :items="list.tasks"
+          :save-tasks="saveTasks"
+          :delete-task="deleteTask"
+          :complete-task="completeTask"
+          :group-name="groupName"
+          :list-id="list.id"
+          :item-key="'text'"
+          @update-items="updateItems"
+          />
       </div>
-    </div>
+  </div>
   </div>
 </template>
-
-
 <script>
 import List from "@/components/List.vue";
 
 export default {
+  watch: {
+    searchText() {
+      this.filteredTasks = this.tasks.filter(task => task.text.toLowerCase().includes(this.searchText.toLowerCase()));
+    }
+  },
   components: {
     List
   },
@@ -41,6 +47,7 @@ export default {
   data() {
     return {
       newListName: "",
+      searchText: "",
       lists: [
         { id: 1, name: 'To Do', tasks: [] },
         { id: 2, name: 'In Progress', tasks: [] },
@@ -50,16 +57,21 @@ export default {
     };
   },
 
+  computed: {
+    filteredLists() {
+      const searchLower = this.searchText.toLowerCase();
+      return this.lists.map(list => ({
+        ...list,
+        tasks: list.tasks.filter(task => task.text.toLowerCase().includes(searchLower))
+      }));
+    },
+  },
+
   methods: {
     filterTasks() {
-      const searchLower = this.searchText.toLowerCase();
-      this.filteredItems = this.localItems.filter(task => task.text.toLowerCase().includes(searchLower));
-  },
-    getTasksByStatus(status) {
-      const list = this.lists.find(list => list.name === status);
-      return list ? list.tasks : [];
-    },
 
+    },
+    
     updateTasks(listId) {
       return (newTaskList) => {
         const list = this.lists.find(list => list.id === listId);
@@ -228,5 +240,4 @@ export default {
     color: white;
 
   }
-
-</style>
+  </style>

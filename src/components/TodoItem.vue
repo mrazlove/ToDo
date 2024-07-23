@@ -31,6 +31,31 @@ export default {
   }
 };
 </script>
+
+<style>
+.completed__task {
+  padding: 8px 16px;
+  background-color: #000000;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.task.completed {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.button__delete, .button__edit, .button__complete {
+  margin-left: 5px;
+  padding: 5px 10px;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+</style>
 <style>
   .input__group {
     display: flex;
